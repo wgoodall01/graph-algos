@@ -2,17 +2,17 @@ import React from "react";
 import { DataSet, Network } from "vis";
 import { bg, primary, secondary, text } from "../vars";
 
-const nodes = new DataSet([
-  { id: 1, label: "N1" },
-  { id: 2, label: "N2" },
-  { id: 3, label: "N3" },
-  { id: 4, label: "N4" },
-  { id: 5, label: "N5" },
-  { id: 6, label: "N6" },
-  { id: 7, label: "N7" }
-]);
+const nodes = [
+  { id: 1 },
+  { id: 2 },
+  { id: 3 },
+  { id: 4 },
+  { id: 5 },
+  { id: 6 },
+  { id: 7 }
+];
 
-const edges = new DataSet([
+const edges = [
   { from: 1, to: 2 },
   { from: 2, to: 3 },
   { from: 3, to: 4 },
@@ -23,38 +23,78 @@ const edges = new DataSet([
 
   { from: 7, to: 3 },
   { from: 4, to: 7 }
-]);
+];
 
 class GraphVis extends React.Component {
   static networkOptions = {
     edges: {
-      color: "red",
+      color: {
+        color: secondary,
+        highlight: primary
+      },
       width: 5,
       smooth: false
     },
     nodes: {
-      mass: 2
+      mass: 1,
+      borderWidth: 0,
+      shape: "circle",
+      color: {
+        background: secondary,
+        highlight: primary
+      }
     },
-    physics: false
+    physics: {
+      enabled: true,
+      solver: "barnesHut",
+      barnesHut: {
+        damping: 0.3,
+        centralGravity: 0.8
+      },
+      stabilization: {
+        iterations: 2000
+      }
+    },
+    layout: { randomSeed: 1 },
+    interaction: { dragView: false }
   };
 
   componentDidMount() {
     const [width, height] = [this.el.clientWidth, this.el.clientHeight];
 
-    this.network = new Network(
+    this.net = new Network(
       this.el,
       { nodes, edges },
       { ...GraphVis.networkOptions, width: `${width}px`, height: `${height}px` }
     );
+
+    if (process.env.NODE_ENV === "development") {
+      window.net = this.net;
+    }
   }
   render() {
     return (
-      <div ref={el => (this.el = el)}>
+      <div className="GraphVis">
         <style jsx>{`
-          div {
+          .GraphVis {
             flex: 1;
+            display: flex;
+            flex-direction: column;
+          }
+
+          .tools {
+            flex: 0;
+          }
+          .net {
+            flex: 1;
+            height: 100%;
           }
         `}</style>
+        <div className="tools">
+          <button onClick={() => this.net.addNodeMode()}>Add Vertex</button>
+          <button onClick={() => this.net.addEdgeMode()}>Add Edge</button>
+        </div>
+        <div className="net" ref={el => (this.el = el)} />
       </div>
     );
   }

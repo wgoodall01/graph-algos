@@ -24,7 +24,6 @@ export default class CustomDocument extends Document {
 
                 * {
                   box-sizing: inherit;
-                  color: inherit;
                 }
 
                 /* latin, normal(400) */
