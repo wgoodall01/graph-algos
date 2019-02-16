@@ -1,6 +1,6 @@
 import LayoutContainer from "../components/LayoutContainer";
 import { primary } from "../vars";
-import GraphVis from "../components/GraphVis";
+import ExampleGraph from "../components/ExampleGraph.js";
 
 export default () => (
   <div>
@@ -27,7 +27,7 @@ export default () => (
       </header>
     </LayoutContainer>
     <section>
-      <GraphVis />
+      <ExampleGraph />
     </section>
   </div>
 );
