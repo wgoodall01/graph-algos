@@ -7,7 +7,10 @@ const buildOptions = ({ draggable, width, height }) => ({
   edges: {
     color: {
       color: secondary,
-      highlight: primary
+      highlight: secondary
+    },
+    chosen: {
+      edge: () => ({ width: 5 })
     },
     font: {
       color: text,
@@ -23,7 +26,7 @@ const buildOptions = ({ draggable, width, height }) => ({
     shape: "circle",
     color: {
       background: secondary,
-      highlight: primary
+      highlight: secondary
     }
   },
   physics: {

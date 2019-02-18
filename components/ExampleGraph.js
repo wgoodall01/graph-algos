@@ -1,5 +1,5 @@
 import Graph from "../components/Graph";
-import { mapWhere } from "../lib/graphUtils.js";
+import { withId, adjacentTo, mapWhere } from "../lib/graphUtils.js";
 
 const nodes = [
   { id: 1, x: -201, y: -15 },
@@ -46,13 +46,20 @@ class ExampleGraph extends React.Component {
         draggable
         events={{
           click: evt => {
-            const nodeId = evt.nodes[0];
+            const id = evt.nodes[0];
+            if (!id) {
+              return;
+            }
             this.setState(state => ({
-              nodes: mapWhere(
-                state.nodes,
-                e => e.id == nodeId,
-                e => ({ ...e, color: e.color ? null : "red" })
-              )
+              nodes: mapWhere(state.nodes, withId(id), e => ({
+                ...e,
+                color: e.color ? null : "red"
+              })),
+
+              edges: mapWhere(state.edges, adjacentTo(id), e => ({
+                ...e,
+                color: e.color ? null : { color: "red" }
+              }))
             }));
           },
           dragEnd: evt => {
