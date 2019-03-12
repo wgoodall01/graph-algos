@@ -9,7 +9,7 @@ const nodes = [
   { id: 5, x: 256, y: 89 },
   { id: 6, x: 77, y: 88 },
   { id: 7, x: -55, y: 21 }
-];
+].map(e => ({ ...e, label: e.id.toString() }));
 
 const edges = [
   { id: -1, from: 1, to: 2 },
