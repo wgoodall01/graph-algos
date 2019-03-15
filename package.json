@@ -6,10 +6,9 @@
   "author": "William Goodall <wgoodall01@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "next",
+    "start": "next",
     "test": "jest --watch",
-    "build": "next build && next export",
-    "start": "next start"
+    "build": "next build && next export"
   },
   "dependencies": {
     "jest": "^24.1.0",
