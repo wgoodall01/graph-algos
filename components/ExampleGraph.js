@@ -1,7 +1,7 @@
 import Graph from "../components/Graph";
 import { withId, adjacentTo, mapWhere } from "../lib/graphUtils.js";
 import { gather } from "../lib/utils.js";
-import exampleGraph from "../lib/exampleGraphData";
+import { lattice } from "../lib/exampleGraphData";
 import { dijkstra } from "../lib/algos/dijkstra.js";
 
 class ExampleGraph extends React.Component {
@@ -17,15 +17,15 @@ class ExampleGraph extends React.Component {
   }
 
   static defaultProps = {
-    graph: exampleGraph,
+    graph: lattice(20, { spacing: 100 }),
     algorithm: dijkstra,
-    to: 5,
-    from: 1
+    to: 20 * 20,
+    from: 0
   };
 
   componentDidMount() {
     const { graph, algorithm, to, from } = this.props;
-    const iter = algorithm(graph, 1, 5);
+    const iter = algorithm(graph, from, to);
 
     const { values, final } = gather(iter);
     this.setState({ steps: values });
