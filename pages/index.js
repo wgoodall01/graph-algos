@@ -1,6 +1,6 @@
 import LayoutContainer from "../components/LayoutContainer";
 import { primary } from "../vars";
-import ExampleGraph from "../components/ExampleGraph.js";
+import ExampleGraph from "../components/ExampleGraph";
 
 export default () => (
   <div>

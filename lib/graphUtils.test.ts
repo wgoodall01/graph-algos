@@ -26,12 +26,12 @@ describe("getById", () => {
   });
 
   it("returns undefined when the item is not present", () => {
-    const input = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }];
+    const input = [1, 2, 3, 4, 5].map(e => ({ id: e, x: 0, y: 0 }));
     expect(getById(input, 10)).toBeUndefined();
   });
 
   it("should return a single element", () => {
-    const input = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }];
+    const input = [1, 2, 3, 4, 5].map(e => ({ id: e, x: 0, y: 0 }));
     expect(getById(input, 3)).toBe(input[2]);
   });
 });

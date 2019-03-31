@@ -1,14 +1,35 @@
-interface Edge {
+export interface Edge {
   id: number;
   from: number;
   to: number;
   weight?: number;
 }
 
-interface Node {
+export interface Node {
   id: number;
-  x?: number;
-  y?: number;
+  x: number; // mandatory x-y embedding
+  y: number;
+}
+
+export interface Graph {
+  edges: Edge[];
+  nodes: Node[];
+}
+
+export function assertUnique(graph: Graph) {
+  const ids: Map<number, Node | Edge> = new Map();
+  const { nodes, edges } = graph;
+  for (const items of [nodes, edges]) {
+    for (const el of items) {
+      if (ids.has(el.id)) {
+        throw new TypeError(`Non-unique graph: duplicated id ${el.id}
+  had   : ${JSON.stringify(ids.get(el.id))}
+  found : ${JSON.stringify(el)}`);
+      } else {
+        ids.set(el.id, el);
+      }
+    }
+  }
 }
 
 export function mapWhere<T, R>(

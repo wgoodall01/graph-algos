@@ -1,6 +1,5 @@
 import Graph from "../components/Graph";
-import { withId, adjacentTo, mapWhere } from "../lib/graphUtils.js";
-import { gather } from "../lib/utils.js";
+import { withId, adjacentTo, mapWhere } from "../lib/graphUtils";
 import { crossLattice } from "../lib/exampleGraphData";
 import { aStar } from "../lib/algos/aStar";
 import { dijkstra } from "../lib/algos/dijkstra";
@@ -28,7 +27,7 @@ class ExampleGraph extends React.Component {
 
   componentDidMount() {
     const { graph, algorithm, to, from } = this.props;
-    const iter = algorithm(graph, {
+    const { steps } = algorithm(graph, {
       from,
       to,
       earlyReturn: true,
@@ -36,8 +35,7 @@ class ExampleGraph extends React.Component {
         Math.sqrt((LATTICE_SIZE - node.r) ** 2 + (LATTICE_SIZE - node.c) ** 2)
     });
 
-    const { values, final } = gather(iter);
-    this.setState({ steps: values });
+    this.setState({ steps });
   }
 
   _handleStep = d => () => {

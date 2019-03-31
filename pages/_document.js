@@ -1,6 +1,6 @@
 import React from "react";
 import Document, { Head, Main, NextScript } from "next/document";
-import { bg, text } from "../vars.js";
+import { bg, text } from "../vars";
 
 export default class CustomDocument extends Document {
   render() {

@@ -1,3 +1,5 @@
+import { Graph, Node, assertUnique } from "./graphUtils";
+
 export const smallExample = {
   nodes: [
     { id: 1, x: -201, y: -15 },
@@ -27,46 +29,87 @@ interface LatticeOpts {
 export function lattice(
   size: number,
   { spacing }: LatticeOpts = { spacing: 1 }
-) {
-  let coord = (r: number, c: number) => r * size + c;
+): Graph {
+  const coord = (r: number, c: number) => r * size + c;
+  const mkId = (coord: number, delta: number) => 1000 * coord + delta;
 
   let nodes = [];
   let edges = [];
   // iterate over rows, cols
   for (let r = 0; r < size; r++) {
     for (let c = 0; c < size; c++) {
-      nodes.push({ id: coord(r, c), x: c * spacing, y: r * spacing, r, c });
+      const node = {
+        id: coord(r, c),
+        x: c * spacing,
+        y: r * spacing,
+        r,
+        c
+      } as Node;
+      nodes.push(node);
     }
   }
 
   // Add in all the edges
   for (let r = 1; r < size; r++) {
     for (let c = 1; c < size; c++) {
-      edges.push({ from: coord(r, c), to: coord(r - 1, c), weight: 1 });
-      edges.push({ from: coord(r, c), to: coord(r, c - 1), weight: 1 });
+      edges.push({
+        from: coord(r, c),
+        to: coord(r - 1, c),
+        weight: 1,
+        id: -mkId(coord(r, c), 0)
+      });
+      edges.push({
+        from: coord(r, c),
+        to: coord(r, c - 1),
+        weight: 1,
+        id: -mkId(coord(r, c), 1)
+      });
     }
   }
 
   // Add edges connecting the first row and column
   for (let n = 1; n < size; n++) {
-    edges.push({ from: coord(0, n), to: coord(0, n - 1), weight: 1 });
-    edges.push({ from: coord(n, 0), to: coord(n - 1, 0), weight: 1 });
+    edges.push({
+      from: coord(0, n),
+      to: coord(0, n - 1),
+      weight: 1,
+      id: -mkId(coord(0, n), 2)
+    });
+    edges.push({
+      from: coord(n, 0),
+      to: coord(n - 1, 0),
+      weight: 1,
+      id: -mkId(coord(n, 0), 3)
+    });
   }
 
+  assertUnique({ nodes, edges });
   return { nodes, edges };
 }
 
-export function crossLattice(size: number, opts: LatticeOpts) {
-  let coord = (r: number, c: number) => r * size + c;
+export function crossLattice(size: number, opts: LatticeOpts): Graph {
+  const coord = (r: number, c: number) => r * size + c;
+  const mkId = (coord: number, delta: number) => 1000 * coord + delta;
 
   let { nodes, edges } = lattice(size, opts);
 
   for (let r = 1; r < size; r++) {
     for (let c = 1; c < size; c++) {
-      edges.push({ from: coord(r - 1, c - 1), to: coord(r, c), weight: 1 });
-      edges.push({ from: coord(r - 1, c), to: coord(r, c - 1), weight: 1 });
+      edges.push({
+        from: coord(r - 1, c - 1),
+        to: coord(r, c),
+        weight: 1,
+        id: -mkId(coord(r, c), 4)
+      });
+      edges.push({
+        from: coord(r - 1, c),
+        to: coord(r, c - 1),
+        weight: 1,
+        id: -mkId(coord(r, c), 5)
+      });
     }
   }
 
+  assertUnique({ nodes, edges });
   return { nodes, edges };
 }
