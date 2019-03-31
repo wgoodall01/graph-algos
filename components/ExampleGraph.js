@@ -1,8 +1,11 @@
 import Graph from "../components/Graph";
 import { withId, adjacentTo, mapWhere } from "../lib/graphUtils.js";
 import { gather } from "../lib/utils.js";
-import { lattice } from "../lib/exampleGraphData";
-import { dijkstra } from "../lib/algos/dijkstra.js";
+import { crossLattice } from "../lib/exampleGraphData";
+import { aStar } from "../lib/algos/aStar";
+import { dijkstra } from "../lib/algos/dijkstra";
+
+const LATTICE_SIZE = 10;
 
 class ExampleGraph extends React.Component {
   constructor(props) {
@@ -17,15 +20,21 @@ class ExampleGraph extends React.Component {
   }
 
   static defaultProps = {
-    graph: lattice(20, { spacing: 100 }),
-    algorithm: dijkstra,
-    to: 20 * 20,
+    graph: crossLattice(LATTICE_SIZE, { spacing: 100 }),
+    algorithm: aStar,
+    to: LATTICE_SIZE ** 2 - 1,
     from: 0
   };
 
   componentDidMount() {
     const { graph, algorithm, to, from } = this.props;
-    const iter = algorithm(graph, from, to);
+    const iter = algorithm(graph, {
+      from,
+      to,
+      earlyReturn: true,
+      heuristic: node =>
+        Math.sqrt((LATTICE_SIZE - node.r) ** 2 + (LATTICE_SIZE - node.c) ** 2)
+    });
 
     const { values, final } = gather(iter);
     this.setState({ steps: values });
