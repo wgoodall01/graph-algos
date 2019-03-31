@@ -8,14 +8,21 @@
   "scripts": {
     "start": "next",
     "test": "jest --watch",
+    "types": "tsc --watch",
     "build": "next build && next export"
   },
   "dependencies": {
+    "@types/jest": "^24.0.11",
+    "@zeit/next-typescript": "^1.1.1",
+    "babel-jest": "^24.5.0",
+    "fork-ts-checker-webpack-plugin": "^1.0.1",
     "jest": "^24.1.0",
     "next": "^8.0.1",
     "next-compose-plugins": "^2.1.1",
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
+    "ts-jest": "^24.0.1",
+    "typescript": "^3.4.1",
     "vis": "^4.21.0"
   }
 }

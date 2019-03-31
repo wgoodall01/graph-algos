@@ -21,8 +21,14 @@ export const smallExample = {
   ]
 };
 
-export function lattice(size, { spacing = 1 } = {}) {
-  let coord = (r, c) => r * size + c;
+interface LatticeOpts {
+  spacing: number;
+}
+export function lattice(
+  size: number,
+  { spacing }: LatticeOpts = { spacing: 1 }
+) {
+  let coord = (r: number, c: number) => r * size + c;
 
   let nodes = [];
   let edges = [];
@@ -50,8 +56,8 @@ export function lattice(size, { spacing = 1 } = {}) {
   return { nodes, edges };
 }
 
-export function crossLattice(size, opts) {
-  let coord = (r, c) => r * size + c;
+export function crossLattice(size: number, opts: LatticeOpts) {
+  let coord = (r: number, c: number) => r * size + c;
 
   let { nodes, edges } = lattice(size, opts);
 

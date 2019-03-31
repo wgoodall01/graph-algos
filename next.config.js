@@ -1,7 +1,17 @@
-const withPlugins = require('next-compose-plugins');
+const withPlugins = require("next-compose-plugins");
+const typescriptPlugin = require("@zeit/next-typescript");
+const ForkTSCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
-module.exports = withPlugins([], {
+module.exports = withPlugins([[typescriptPlugin]], {
   exportPathMap: () => ({
-    '/': {page: '/'}
-  })
+    "/": { page: "/" }
+  }),
+
+  webpack(config, options) {
+    if (options.isServer) {
+      config.plugins.push(new ForkTSCheckerWebpackPlugin());
+    }
+
+    return config;
+  }
 });

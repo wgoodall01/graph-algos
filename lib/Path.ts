@@ -1,18 +1,22 @@
-export default class Path {
-  constructor(item, prev = null, deltaWeight = 0) {
+export default class Path<T> {
+  item: T;
+  prev: Path<T> | null;
+  deltaWeight: number;
+
+  constructor(item: T, prev: Path<T> | null = null, deltaWeight: number = 0) {
     this.prev = prev;
     this.item = item;
     this.deltaWeight = deltaWeight;
   }
 
-  replaceFrom(other) {
+  replaceFrom(other: Path<T>) {
     this.prev = other.prev;
     this.item = other.item;
     this.deltaWeight = other.deltaWeight;
     return this;
   }
 
-  items() {
+  items(): Array<T> {
     if (this.prev == null) {
       return [this.item];
     } else {
@@ -22,7 +26,7 @@ export default class Path {
     }
   }
 
-  get weight() {
+  get weight(): number {
     if (this.prev == null) {
       return this.deltaWeight;
     } else {
@@ -31,11 +35,11 @@ export default class Path {
     }
   }
 
-  append(item, deltaWeight = 0) {
+  append(item: T, deltaWeight: number = 0): Path<T> {
     return new Path(item, this, deltaWeight);
   }
 
-  get length() {
+  get length(): number {
     if (this.prev == null) {
       return 1;
     } else {

@@ -1,7 +1,5 @@
 import {
   mapWhere,
-  withId,
-  adjacentTo,
   opposite,
   getOpposite,
   getById,
@@ -12,7 +10,7 @@ import {
 
 describe("mapWhere", () => {
   it("is a noop when called with empty array", () => {
-    expect(mapWhere([], e => true, e => false)).toEqual([]);
+    expect(mapWhere([], _ => true, _ => false)).toEqual([]);
   });
 
   it("modifies items correctly", () => {
@@ -45,18 +43,18 @@ describe("getAdjacent", () => {
 
   it("should return multiple elements", () => {
     const input = [
-      { to: 1, from: 123 },
-      { from: 1, to: 321 },
-      { to: 4, from: 5 },
-      { from: 3, to: 9 }
+      { id: 1, to: 1, from: 123 },
+      { id: 2, from: 1, to: 321 },
+      { id: 3, to: 4, from: 5 },
+      { id: 4, from: 3, to: 9 }
     ];
-    const out = [{ to: 1, from: 123 }, { from: 1, to: 321 }];
+    const out = [{ id: 1, to: 1, from: 123 }, { id: 2, from: 1, to: 321 }];
     expect(getAdjacent(input, 1)).toEqual(out);
   });
 });
 
 describe("opposite, getOpposite", () => {
-  const edge = { from: 1, to: 2 };
+  const edge = { id: 0, from: 1, to: 2 };
 
   it("should work to->from", () => {
     expect(getOpposite(edge, 1)).toBe(2);
@@ -72,7 +70,7 @@ describe("opposite, getOpposite", () => {
 
   it("should have working curried version", () => {
     const edges = [[1, 10], [10, 2], [10, 3], [4, 10], [10, 5], [10, 6]].map(
-      ([l, r]) => ({ from: l, to: r })
+      ([l, r], i) => ({ id: -i, from: l, to: r })
     );
     const expected = [1, 2, 3, 4, 5, 6];
     expect(edges.map(opposite(10))).toEqual(expected);
@@ -81,7 +79,7 @@ describe("opposite, getOpposite", () => {
 
 describe("and", () => {
   it("should perform logical AND", () => {
-    const test = and(x => x % 2 == 0, x => x > 10);
+    const test = and<number>(x => x % 2 == 0, x => x > 10);
     expect(test(10)).toBe(false);
     expect(test(1)).toBe(false);
     expect(test(12)).toBe(true);
@@ -89,21 +87,21 @@ describe("and", () => {
   });
 
   it("should take n arguments", () => {
-    let tests = [];
+    let tests: Array<(e: null) => boolean> = [];
     for (let i = 0; i < 100; i++) {
-      tests.push(e => true);
+      tests.push(_ => true);
     }
 
     expect(and(...tests)(null)).toBe(true);
 
-    tests.push(e => false);
+    tests.push(_ => false);
     expect(and(...tests)(null)).toBe(false);
   });
 });
 
 describe("or", () => {
   it("should perform logical OR", () => {
-    const test = or(x => x % 2 == 0, x => x > 10);
+    const test = or<number>(x => x % 2 == 0, x => x > 10);
     expect(test(10)).toBe(true);
     expect(test(1)).toBe(false);
     expect(test(12)).toBe(true);
@@ -111,14 +109,14 @@ describe("or", () => {
   });
 
   it("should take n arguments", () => {
-    let tests = [];
+    let tests: Array<(e: null) => boolean> = [];
     for (let i = 0; i < 100; i++) {
-      tests.push(e => true);
+      tests.push(_ => true);
     }
 
     expect(or(...tests)(null)).toBe(true);
 
-    tests.push(e => false);
+    tests.push(_ => false);
     expect(or(...tests)(null)).toBe(true);
   });
 });

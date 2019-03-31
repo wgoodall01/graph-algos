@@ -1,7 +1,7 @@
 import Path from "./Path";
 
-it("should have length=1 when empty", () => {
-  const p = new Path();
+it("should have length=1 when single", () => {
+  const p = new Path(0);
   expect(p.length).toBe(1);
 });
 
