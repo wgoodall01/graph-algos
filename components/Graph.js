@@ -35,6 +35,7 @@ const buildOptions = ({ draggable, width, height }) => ({
   layout: { randomSeed: 1 },
   interaction: {
     dragView: false,
+    zoomView: false,
     dragNodes: draggable,
     selectConnectedEdges: false
   },
