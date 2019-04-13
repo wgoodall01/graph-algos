@@ -32,11 +32,19 @@ const showVisitedEdge = (e: Edge) =>
     color: { color: "white" }
   } as Edge);
 
-export function makeFrame(
-  graph: Graph,
-  visited: Map<number, Path<number>>,
-  currentPath: Path<number>
-): Graph {
+interface MakeFrameArgs {
+  graph: Graph;
+  visited: Map<number, Path<number>>;
+  currentPath: Path<number>;
+  final?: boolean;
+}
+
+export function makeFrame({
+  graph,
+  visited,
+  currentPath,
+  final = false
+}: MakeFrameArgs): Graph {
   const nodes = graph.nodes.map(node => {
     let decorated = { ...node };
     // highlight nodes on the current path
@@ -48,6 +56,12 @@ export function makeFrame(
     }
 
     if (currentPath.prev !== null && currentPath.prev.has([node.id])) {
+      decorated = showActiveNode(decorated);
+    }
+
+    // for the final frame, show the last node active and with cost
+    if (final && node.id === currentPath.item) {
+      decorated.label = currentPath.weight.toString();
       decorated = showActiveNode(decorated);
     }
 

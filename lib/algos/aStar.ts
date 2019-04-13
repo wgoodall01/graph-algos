@@ -43,7 +43,7 @@ export function aStar(
     }))
   };
 
-  while (q.length > 0) {
+  queueLoop: while (q.length > 0) {
     let path = q.deque() as Path<number>; // can't be undefined
 
     // Add all adjacent nodes to the queue
@@ -51,8 +51,13 @@ export function aStar(
       const adj = getOpposite(edge, path.item) as number;
       let newPath = path.append(adj, edge.weight || 0);
 
+      if (newPath.length >= 3 && newPath.item == newPath.prev!.prev!.item) {
+        // ignore edges which just double back on the existing path.
+        continue;
+      }
+
       // Update the view with each edge
-      steps.push(makeFrame(view, visited, newPath));
+      steps.push(makeFrame({ graph: view, visited, currentPath: newPath }));
 
       // update visited
       let oldPath = visited.get(adj);
@@ -66,8 +71,8 @@ export function aStar(
       visited.set(adj, newPath);
 
       // return early, if enabled
-      if (earlyReturn && adj == to) {
-        return { steps, path: newPath };
+      if (earlyReturn && adj === to) {
+        break queueLoop;
       }
 
       q.enque(newPath);
@@ -78,11 +83,14 @@ export function aStar(
     const finalPath = visited.get(to) as Path<number>;
 
     // show the final path
-    steps.push(makeFrame(view, visited, finalPath));
+    steps.push(
+      makeFrame({ graph: view, visited, currentPath: finalPath, final: true })
+    );
 
     // return the best path found
     return { steps, path: finalPath };
   } else {
+    console.log("no path found");
     // no path found---must be disconnected
     return { steps, path: null };
   }
