@@ -17,16 +17,22 @@ const buildOptions = ({ draggable, width, height }) => ({
       strokeWidth: 6,
       strokeColor: secondary
     },
-    width: 5,
-    smooth: false
+    arrows: {
+      to: { scaleFactor: 0.5 },
+      from: { scaleFactor: 0.5 }
+    },
+    width: 2,
+    smooth: true
   },
   nodes: {
-    mass: 1,
     borderWidth: 0,
     shape: "circle",
     color: {
       background: secondary,
       highlight: secondary
+    },
+    font: {
+      color: text
     }
   },
   physics: {

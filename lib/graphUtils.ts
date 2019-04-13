@@ -1,11 +1,13 @@
-export interface Edge {
+import { EdgeOptions, NodeOptions } from "vis";
+
+export interface Edge extends EdgeOptions {
   id: number;
   from: number;
   to: number;
   weight?: number;
 }
 
-export interface Node {
+export interface Node extends NodeOptions {
   id: number;
   x: number; // mandatory x-y embedding
   y: number;

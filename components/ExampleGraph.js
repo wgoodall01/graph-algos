@@ -4,7 +4,7 @@ import { crossLattice } from "../lib/exampleGraphData";
 import { aStar } from "../lib/algos/aStar";
 import { dijkstra } from "../lib/algos/dijkstra";
 
-const LATTICE_SIZE = 10;
+const LATTICE_SIZE = 4;
 
 class ExampleGraph extends React.Component {
   constructor(props) {
@@ -21,16 +21,17 @@ class ExampleGraph extends React.Component {
   static defaultProps = {
     graph: crossLattice(LATTICE_SIZE, { spacing: 100 }),
     algorithm: aStar,
+    earlyReturn: true,
     to: LATTICE_SIZE ** 2 - 1,
     from: 0
   };
 
   componentDidMount() {
-    const { graph, algorithm, to, from } = this.props;
+    const { graph, algorithm, to, from, earlyReturn } = this.props;
     const { steps } = algorithm(graph, {
       from,
       to,
-      earlyReturn: true,
+      earlyReturn,
       heuristic: node =>
         Math.sqrt((LATTICE_SIZE - node.r) ** 2 + (LATTICE_SIZE - node.c) ** 2)
     });

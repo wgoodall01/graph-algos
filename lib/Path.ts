@@ -1,3 +1,5 @@
+import { isEqual } from "lodash";
+
 export default class Path<T> {
   item: T;
   prev: Path<T> | null;
@@ -24,6 +26,18 @@ export default class Path<T> {
       prevItems.push(this.item);
       return prevItems;
     }
+  }
+
+  has(find: T[]): boolean {
+    const items = this.items();
+
+    for (let i = 0; i < items.length; i++) {
+      const cmp = items.slice(i, i + find.length);
+      if (isEqual(cmp, find)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   get weight(): number {

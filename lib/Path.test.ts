@@ -24,3 +24,23 @@ it("should have working items()", () => {
 
   expect(p2.items()).toEqual(["a", "b", "c"]);
 });
+
+it("should have working has()", () => {
+  let path = new Path(0);
+  path = path.append(1);
+  path = path.append(2);
+  path = path.append(3);
+  path = path.append(4);
+
+  expect(path.has([])).toBe(true);
+  expect(path.has([0])).toBe(true);
+  expect(path.has([1])).toBe(true);
+  expect(path.has([4])).toBe(true);
+  expect(path.has([3])).toBe(true);
+  expect(path.has([2, 3])).toBe(true);
+  expect(path.has([1, 3])).toBe(false);
+  expect(path.has([1, 3])).toBe(false);
+  expect(path.has([3, 2])).toBe(false);
+  expect(path.has([4, 5])).toBe(false);
+  expect(path.has([3, 5])).toBe(false);
+});
