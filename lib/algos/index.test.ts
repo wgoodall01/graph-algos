@@ -33,7 +33,7 @@ for (let algorithm of [dijkstra, aStar]) {
       expect(path.items()).toEqual([1, 7, 3, 4, 5]);
     });
 
-    it.each([2, 10])(
+    it.each([2, 8])(
       "shouldn't find a stupid path in a %d^2 lattice graph",
       size => {
         const graph = lattice(size, { spacing: 1 }); // NxN square lattice
@@ -48,7 +48,7 @@ for (let algorithm of [dijkstra, aStar]) {
       }
     );
 
-    it.each([2, 5, 10])(
+    it.each([2, 5, 8])(
       "shouldn't find a stupid path in a %d^2 cross lattice graph",
       size => {
         const graph = crossLattice(size, { spacing: 1 }); // NxN square lattice
@@ -65,8 +65,8 @@ for (let algorithm of [dijkstra, aStar]) {
   });
 }
 
-it("aStar() should run faster than dijkstra() over a 10^2 cross lattice", () => {
-  const size = 10;
+it("aStar() should run in fewer steps than dijkstra() over a 5^2 cross lattice", () => {
+  const size = 5;
   const graph = crossLattice(size, { spacing: 1 });
 
   const { steps: dijkstraSteps, path: dijkstraPath } = dijkstra(graph, {
