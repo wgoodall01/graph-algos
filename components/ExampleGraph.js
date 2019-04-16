@@ -1,5 +1,6 @@
 import Graph from "../components/Graph";
 import { withId, adjacentTo, mapWhere } from "../lib/graphUtils";
+import { text, secondary } from "../vars";
 import { crossLattice } from "../lib/exampleGraphData";
 import { aStar } from "../lib/algos/aStar";
 import { dijkstra } from "../lib/algos/dijkstra";
@@ -13,7 +14,7 @@ class ExampleGraph extends React.Component {
       i: 0,
       playing: false,
       steps: [],
-      width: 500,
+      width: "100%",
       height: 600
     };
   }
@@ -70,25 +71,58 @@ class ExampleGraph extends React.Component {
     const thisStep = steps[i];
     return (
       <div>
-        <button onClick={() => this.setState({ i: 0 })}>{0}</button>
-        <button onClick={this._handleStep(-1)}>{"<"}</button>
-        <input
-          type="range"
-          step={1}
-          min={0}
-          max={steps.length - 1}
-          value={i}
-          onChange={e => this.setState({ i: parseInt(e.target.value) })}
-        />
-        <button onClick={this._handleStep(1)}>{">"}</button>
-        {playing ? (
-          <button onClick={this._handlePlay(0)}>{"x"}</button>
-        ) : (
-          <button onClick={this._handlePlay(200)}>{">>"}</button>
-        )}
-        <span>
-          step {i + 1} of {steps.length}, playing={playing.toString()}
-        </span>
+        <style jsx>{`
+          .controls {
+            font-size: smaller;
+            display: flex;
+            justify-content: center;
+            margin-right: -0.5rem;
+          }
+
+          .controls > * {
+            margin-right: 0.5rem;
+          }
+
+          .controls button {
+            width: 3rem;
+            background: ${secondary};
+            color: ${text};
+            border-radius: 0.3rem;
+            border: none;
+            font-size: inherit;
+          }
+
+          .number {
+            display: inline-block;
+            width: 3rem;
+          }
+
+          .number.right {
+            text-align: right;
+          }
+        `}</style>
+        <div className="controls">
+          <button onClick={() => this.setState({ i: 0 })}>{0}</button>
+          <button onClick={this._handleStep(-1)}>{"<"}</button>
+          <input
+            type="range"
+            step={1}
+            min={0}
+            max={steps.length - 1}
+            value={i}
+            onChange={e => this.setState({ i: parseInt(e.target.value) })}
+          />
+          <button onClick={this._handleStep(1)}>{">"}</button>
+          {playing ? (
+            <button onClick={this._handlePlay(0)}>{"x"}</button>
+          ) : (
+            <button onClick={this._handlePlay(100)}>{">>"}</button>
+          )}
+          <span>
+            <span className="number right">{i + 1}</span> /{" "}
+            <span className="number">{steps.length}</span>
+          </span>
+        </div>
         {thisStep && (
           <Graph
             nodes={thisStep.nodes}

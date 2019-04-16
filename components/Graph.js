@@ -14,7 +14,7 @@ const buildOptions = ({ draggable, width, height }) => ({
     },
     font: {
       color: text,
-      strokeWidth: 6,
+      strokeWidth: 1,
       strokeColor: secondary
     },
     arrows: {
@@ -66,13 +66,15 @@ class Graph extends React.Component {
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
     events: PropTypes.object.isRequired,
+    scale: PropTypes.number,
     draggable: PropTypes.bool
   };
 
   static defaultProps = {
-    width: 600,
-    height: 600,
+    width: "100%",
+    height: 500,
     draggable: false,
+    scale: 1,
     events: {}
   };
 
@@ -95,6 +97,12 @@ class Graph extends React.Component {
     }
   }
 
+  _resize() {
+    const { scale } = this.props;
+    this.net.fit();
+    this.net.moveTo({ scale });
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     const props = this.props;
 
@@ -112,7 +120,7 @@ class Graph extends React.Component {
           draggable: nextProps.draggable
         })
       );
-      this.net.fit(); // for consistent size changes
+      this._resize(); // for consistent size changes
     }
 
     // update events if they have changed
@@ -131,6 +139,7 @@ class Graph extends React.Component {
       { nodes, edges },
       buildOptions({ width, height, draggable })
     );
+    this._resize();
 
     this._updateEvents({}, events);
 
