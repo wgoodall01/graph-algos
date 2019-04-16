@@ -15,7 +15,7 @@ const buildOptions = ({ draggable, width, height }) => ({
     font: {
       color: text,
       strokeWidth: 1,
-      strokeColor: secondary
+      strokeColor: "black"
     },
     arrows: {
       to: { scaleFactor: 0.5 },
@@ -63,8 +63,9 @@ class Graph extends React.Component {
   static propTypes = {
     nodes: PropTypes.array.isRequired,
     edges: PropTypes.array.isRequired,
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired,
+    width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    height: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+      .isRequired,
     events: PropTypes.object.isRequired,
     scale: PropTypes.number,
     draggable: PropTypes.bool
@@ -100,7 +101,9 @@ class Graph extends React.Component {
   _resize() {
     const { scale } = this.props;
     this.net.fit();
-    this.net.moveTo({ scale });
+    if (scale != null) {
+      this.net.moveTo({ scale });
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -120,13 +123,14 @@ class Graph extends React.Component {
           draggable: nextProps.draggable
         })
       );
-      this._resize(); // for consistent size changes
     }
 
     // update events if they have changed
     if (nextProps.events !== props.events) {
       this._updateEvents(props, nextProps);
     }
+
+    this._resize(); // for consistent size changes
 
     return false;
   }

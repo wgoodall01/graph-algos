@@ -64,9 +64,8 @@ export function aStar(
       if (typeof oldPath !== "undefined") {
         if (newPath.weight < oldPath.weight) {
           newPath = oldPath.replaceFrom(newPath);
-        } else {
-          continue;
         }
+        continue;
       }
       visited.set(adj, newPath);
 

@@ -22,7 +22,7 @@ class ExampleGraph extends React.Component {
   static defaultProps = {
     graph: crossLattice(LATTICE_SIZE, { spacing: 100 }),
     algorithm: aStar,
-    earlyReturn: true,
+    earlyReturn: false,
     to: LATTICE_SIZE ** 2 - 1,
     from: 0
   };
@@ -129,6 +129,7 @@ class ExampleGraph extends React.Component {
             edges={thisStep.edges}
             width={width}
             height={height}
+            scale={this.props.scale}
           />
         )}
       </div>
