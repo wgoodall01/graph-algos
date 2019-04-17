@@ -1,76 +1,31 @@
-import ExampleGraph from "../components/ExampleGraph";
-import AsideSection from "../components/AsideSection";
+import dynamic from "next/dynamic";
 
-export default () => (
+const Loading = () => (
   <div>
     <style jsx>{`
-      .title {
-        font-size: 3rem;
+      div {
+        /* cover the page */
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      p {
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 0.3rem;
+        opacity: 0.5;
       }
     `}</style>
-    <AsideSection>
-      <header>
-        <h1 className="title">Graph Demo</h1>
-      </header>
-    </AsideSection>
-    <AsideSection aside={<ExampleGraph algorithm="dijkstra" />}>
-      <h2>This is Dijkstra's Algorithm</h2>
-      <p>Here's some description---</p>
-      <ul>
-        <li>How it works</li>
-        <li>Implementation (maybe?)</li>
-        <li>
-          Advantages, disadvantages, scope (big-O, negative cost cycles, etc)
-        </li>
-      </ul>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-    </AsideSection>
-    <AsideSection aside={<ExampleGraph earlyReturn={true} />}>
-      <h2>...and this is A*</h2>
-      <p>Again, some description here---</p>
-      <ul>
-        <li>How it's different from Dijkstra</li>
-        <li>Implementation: priority queue</li>
-        <li>maybe: link the source on GH?</li>
-      </ul>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-      <p>-- --</p>
-    </AsideSection>
+    <p>loading slides</p>
   </div>
 );
+
+export default dynamic(() => import("../pres"), {
+  ssr: false,
+  loading: Loading
+});

@@ -13,6 +13,7 @@ export interface aStarOpts {
   heuristic?: ((e: Node) => number) | null;
   earlyReturn?: boolean;
   progress?: (p: progressArg) => any;
+  report?: "early" | "late"; // when the frame is generated
 }
 export interface aStarResult {
   steps: Graph[];
@@ -25,10 +26,10 @@ export function aStar(
     to,
     heuristic = null,
     earlyReturn = false,
-    progress = () => {}
+    progress = () => {},
+    report = "late"
   }: aStarOpts
 ): aStarResult {
-  console.log("aStar: starting");
   // Make a priority queue, ranking elements by their heuristic values
   let priority = null;
   if (heuristic) {
@@ -46,8 +47,8 @@ export function aStar(
   // keep track of the steps we take
   const steps: Graph[] = [];
 
-  // Keep track of an annotated graph state that we can change
-  let view = {
+  // Write weights to the edge labels
+  let graph = {
     nodes,
     edges: edges.map(e => ({
       ...e,
@@ -57,6 +58,12 @@ export function aStar(
 
   queueLoop: while (q.length > 0) {
     let path = q.deque() as Path<number>; // can't be undefined
+
+    if (report == "late") {
+      // Update the view with each edge
+      steps.push(makeFrame({ graph, visited, currentPath: path }));
+      progress({ n: steps.length, last: steps[steps.length - 1] });
+    }
 
     // Add all adjacent nodes to the queue
     for (let edge of getAdjacent(edges, path.item)) {
@@ -68,9 +75,11 @@ export function aStar(
         continue;
       }
 
-      // Update the view with each edge
-      steps.push(makeFrame({ graph: view, visited, currentPath: newPath }));
-      progress({ n: steps.length, last: steps[steps.length - 1] });
+      if (report == "early") {
+        // Update the view with each edge
+        steps.push(makeFrame({ graph, visited, currentPath: newPath }));
+        progress({ n: steps.length, last: steps[steps.length - 1] });
+      }
 
       // update visited
       let oldPath = visited.get(adj);
@@ -96,13 +105,12 @@ export function aStar(
 
     // show the final path
     steps.push(
-      makeFrame({ graph: view, visited, currentPath: finalPath, final: true })
+      makeFrame({ graph, visited, currentPath: finalPath, final: true })
     );
 
     // return the best path found
     return { steps, path: finalPath };
   } else {
-    console.log("no path found");
     // no path found---must be disconnected
     return { steps, path: null };
   }

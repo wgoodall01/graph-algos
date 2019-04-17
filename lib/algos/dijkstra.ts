@@ -6,6 +6,9 @@ export function dijkstra(
   opts: aStarOpts
 ): aStarResult {
   // Delegate to aStar, with an empty heuristic
-  const result = aStar({ nodes, edges }, { ...opts, heuristic: _ => 0 });
+  const result = aStar(
+    { nodes, edges },
+    { ...opts, heuristic: _ => 0, report: "early" }
+  );
   return result;
 }

@@ -96,9 +96,12 @@ class ExampleGraph extends React.Component {
             div {
               text-align: center;
               font-size: 1rem;
+              text-transform: uppercase;
+              letter-spacing: 0.3rem;
+              opacity: 0.5;
             }
           `}</style>
-          loading frame {progress}
+          generating frame {progress}
         </div>
       );
     }

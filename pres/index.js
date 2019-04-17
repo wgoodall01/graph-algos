@@ -26,6 +26,10 @@ const squareDoughnutLattice = filterById(
   }
 );
 
+const BottomLabel = ({ children }) => (
+  <Text style={{ textAlign: "center" }}>{children}</Text>
+);
+
 const Presentation = ({}) => (
   <Deck progress="bar" theme={theme} transition={["slide"]}>
     <Slide>
@@ -128,6 +132,30 @@ const Presentation = ({}) => (
     />
     <Slide>
       <ExampleGraph
+        graph={crossLattice(7, { spacing: 80 })}
+        algorithm="dijkstra"
+        from={minNode(crossLattice(7)).id}
+        to={maxNode(crossLattice(7)).id}
+        hideWeights={true}
+        earlyReturn={false}
+        scale={1}
+      />
+      <BottomLabel>Dijkstra</BottomLabel>
+    </Slide>
+    <Slide>
+      <ExampleGraph
+        graph={crossLattice(7, { spacing: 80 })}
+        algorithm="aStar"
+        from={minNode(crossLattice(7)).id}
+        to={maxNode(crossLattice(7)).id}
+        hideWeights={true}
+        earlyReturn={true}
+        scale={1}
+      />
+      <BottomLabel>A*</BottomLabel>
+    </Slide>
+    <Slide>
+      <ExampleGraph
         graph={squareDoughnutLattice}
         algorithm="aStar"
         from={minNode(squareDoughnutLattice).id}
@@ -136,12 +164,17 @@ const Presentation = ({}) => (
         earlyReturn={true}
         scale={1.3}
       />
+      <BottomLabel>A* comparison</BottomLabel>
     </Slide>
     <Slide>
-      <Heading>Characteristics of A*</Heading>
+      <Heading>A* Characteristics</Heading>
       <Text>
         A* sometimes doesn't find the absolute shortest path. It's an
-        approximate algorithm: it sort of just does its best in limited time.
+        approximate algorithm: it does its best in limited time.
+      </Text>
+      <Text>
+        The definition of the heuristic h(v) can completely change how A* works.
+        If h(v) = 0, it's just Dijkstra's algorithm.
       </Text>
     </Slide>
   </Deck>
