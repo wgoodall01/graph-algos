@@ -1,6 +1,5 @@
 import ExampleGraph from "../components/ExampleGraph";
 import AsideSection from "../components/AsideSection";
-import { dijkstra } from "../lib/algos/dijkstra";
 
 export default () => (
   <div>
@@ -14,7 +13,7 @@ export default () => (
         <h1 className="title">Graph Demo</h1>
       </header>
     </AsideSection>
-    <AsideSection aside={<ExampleGraph algorithm={dijkstra} />}>
+    <AsideSection aside={<ExampleGraph algorithm="dijkstra" />}>
       <h2>This is Dijkstra's Algorithm</h2>
       <p>Here's some description---</p>
       <ul>
@@ -45,7 +44,7 @@ export default () => (
       <p>-- --</p>
       <p>-- --</p>
     </AsideSection>
-    <AsideSection aside={<ExampleGraph />}>
+    <AsideSection aside={<ExampleGraph earlyReturn={true} />}>
       <h2>...and this is A*</h2>
       <p>Again, some description here---</p>
       <ul>

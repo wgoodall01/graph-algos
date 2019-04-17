@@ -1,4 +1,5 @@
 import { Graph, Node, assertUnique } from "./graphUtils";
+import { maxBy, minBy } from "lodash";
 
 export const smallExample = {
   nodes: [
@@ -112,4 +113,23 @@ export function crossLattice(size: number, opts: LatticeOpts): Graph {
 
   assertUnique({ nodes, edges });
   return { nodes, edges };
+}
+
+export function filterById(
+  graph: Graph,
+  predicate: (id: number) => boolean
+): Graph {
+  const nodes = graph.nodes.filter(node => predicate(node.id));
+  const edges = graph.edges.filter(
+    edge => predicate(edge.to) && predicate(edge.from)
+  );
+  return { nodes, edges };
+}
+
+export function maxNode(graph: Graph): Node {
+  return maxBy(graph.nodes, node => node.id) as Node;
+}
+
+export function minNode(graph: Graph): Node {
+  return minBy(graph.nodes, node => node.id) as Node;
 }

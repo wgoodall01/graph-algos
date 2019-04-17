@@ -3,11 +3,16 @@ import Path from "../Path";
 import { getAdjacent, getOpposite, getById, Graph, Node } from "../graphUtils";
 import { makeFrame } from "./view";
 
+export interface progressArg {
+  n: number; // number of frames
+  last: Graph; // last frame
+}
 export interface aStarOpts {
   from: number;
   to: number;
   heuristic?: ((e: Node) => number) | null;
   earlyReturn?: boolean;
+  progress?: (p: progressArg) => any;
 }
 export interface aStarResult {
   steps: Graph[];
@@ -15,8 +20,15 @@ export interface aStarResult {
 }
 export function aStar(
   { nodes, edges }: Graph,
-  { from, to, heuristic = null, earlyReturn = false }: aStarOpts
+  {
+    from,
+    to,
+    heuristic = null,
+    earlyReturn = false,
+    progress = () => {}
+  }: aStarOpts
 ): aStarResult {
+  console.log("aStar: starting");
   // Make a priority queue, ranking elements by their heuristic values
   let priority = null;
   if (heuristic) {
@@ -58,6 +70,7 @@ export function aStar(
 
       // Update the view with each edge
       steps.push(makeFrame({ graph: view, visited, currentPath: newPath }));
+      progress({ n: steps.length, last: steps[steps.length - 1] });
 
       // update visited
       let oldPath = visited.get(adj);

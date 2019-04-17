@@ -1,15 +1,22 @@
 prev = new map of vertex::vertex
 dist_to = new map of vertex::number
-Q = new queue of vertices
+
+Q = [ new priority queue of vertices,
+    [ ranked by g(v) + h(v),
+    [ where g(v) is dist_to[v],
+    [ and h(v) is a heuristic function 
 
 dist_to[source] = 0
 
 while Q is not empty:
-  u = vertex in Q with smallest dist_to[u]
+  u = next vertex in Q, according to priority rules
   remove u from Q
 
   for each neighbor v of u:
     new_dist = dist_to[u] + length(u, v) 
+
+	if v is the destination vertex:
+	  return our result
 
     if new_dist < dist_to[v]:
       dist_to[v] = alt

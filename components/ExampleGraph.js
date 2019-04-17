@@ -1,11 +1,13 @@
 import Graph from "../components/Graph";
 import { withId, adjacentTo, mapWhere } from "../lib/graphUtils";
 import { text, secondary } from "../vars";
+import { throttle } from "lodash";
 import { crossLattice } from "../lib/exampleGraphData";
 import { aStar } from "../lib/algos/aStar";
 import { dijkstra } from "../lib/algos/dijkstra";
+import AlgoWorker from "../lib/algoWorker.worker";
 
-const LATTICE_SIZE = 4;
+const LATTICE_SIZE = 12;
 
 class ExampleGraph extends React.Component {
   constructor(props) {
@@ -15,13 +17,14 @@ class ExampleGraph extends React.Component {
       playing: false,
       steps: [],
       width: "100%",
-      height: 600
+      height: 600,
+      progress: 0
     };
   }
 
   static defaultProps = {
     graph: crossLattice(LATTICE_SIZE, { spacing: 100 }),
-    algorithm: aStar,
+    algorithm: "aStar",
     earlyReturn: false,
     to: LATTICE_SIZE ** 2 - 1,
     from: 0
@@ -29,16 +32,30 @@ class ExampleGraph extends React.Component {
 
   componentDidMount() {
     const { graph, algorithm, to, from, earlyReturn } = this.props;
-    const { steps } = algorithm(graph, {
-      from,
-      to,
-      earlyReturn,
-      heuristic: node =>
-        Math.sqrt((LATTICE_SIZE - node.r) ** 2 + (LATTICE_SIZE - node.c) ** 2)
-    });
 
-    this.setState({ steps });
+    this.worker = new AlgoWorker();
+    this.worker.addEventListener("message", this._handleWorkerMessage);
+    this.worker.postMessage({
+      algorithm,
+      graph,
+      to,
+      from,
+      earlyReturn,
+      heuristicTarget: { r: LATTICE_SIZE, c: LATTICE_SIZE }
+    });
   }
+
+  _handleWorkerMessage = ({ data }) => {
+    if (data.type === "progress") {
+      this._handleProgress(data);
+    } else if (data.type === "done") {
+      this.setState({ steps: data.steps, progress: false });
+    }
+  };
+
+  _handleProgress = throttle(({ n, last }) => {
+    this.setState(s => ({ progress: s.progress === false ? false : n }));
+  }, 50);
 
   _handleStep = d => () => {
     this.setState(e => {
@@ -64,11 +81,28 @@ class ExampleGraph extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this._interval);
+    this.worker.terminate();
   }
 
   render() {
-    const { steps, i, width, height, playing } = this.state;
+    const { steps, i, width, height, playing, progress } = this.state;
+    const { scale, hideWeights } = this.props;
     const thisStep = steps[i];
+
+    if (progress !== false) {
+      return (
+        <div>
+          <style jsx>{`
+            div {
+              text-align: center;
+              font-size: 1rem;
+            }
+          `}</style>
+          loading frame {progress}
+        </div>
+      );
+    }
+
     return (
       <div>
         <style jsx>{`
@@ -116,7 +150,9 @@ class ExampleGraph extends React.Component {
           {playing ? (
             <button onClick={this._handlePlay(0)}>{"x"}</button>
           ) : (
-            <button onClick={this._handlePlay(100)}>{">>"}</button>
+            <button onClick={this._handlePlay(3000 / steps.length)}>
+              {">>"}
+            </button>
           )}
           <span>
             <span className="number right">{i + 1}</span> /{" "}
@@ -129,7 +165,8 @@ class ExampleGraph extends React.Component {
             edges={thisStep.edges}
             width={width}
             height={height}
-            scale={this.props.scale}
+            scale={scale}
+            hideWeights={hideWeights}
           />
         )}
       </div>

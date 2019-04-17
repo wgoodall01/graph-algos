@@ -3,7 +3,7 @@ import { Network } from "vis";
 import { bg, primary, secondary, text } from "../vars";
 import PropTypes from "prop-types";
 
-const buildOptions = ({ draggable, width, height }) => ({
+const buildOptions = ({ draggable, width, height, hideWeights }) => ({
   edges: {
     color: {
       color: secondary,
@@ -14,6 +14,7 @@ const buildOptions = ({ draggable, width, height }) => ({
     },
     font: {
       color: text,
+      size: hideWeights ? 1 : 14,
       strokeWidth: 1,
       strokeColor: "black"
     },
@@ -67,8 +68,9 @@ class Graph extends React.Component {
     height: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
       .isRequired,
     events: PropTypes.object.isRequired,
+    draggable: PropTypes.bool,
     scale: PropTypes.number,
-    draggable: PropTypes.bool
+    hideWeights: PropTypes.bool
   };
 
   static defaultProps = {
@@ -76,6 +78,7 @@ class Graph extends React.Component {
     height: 500,
     draggable: false,
     scale: 1,
+    hideWeights: false,
     events: {}
   };
 
@@ -120,7 +123,8 @@ class Graph extends React.Component {
         buildOptions({
           width: nextProps.width,
           height: nextProps.height,
-          draggable: nextProps.draggable
+          draggable: nextProps.draggable,
+          hideWeights: props.hideWeights
         })
       );
     }
@@ -136,12 +140,20 @@ class Graph extends React.Component {
   }
 
   componentDidMount() {
-    const { nodes, edges, width, height, events, draggable } = this.props;
+    const {
+      nodes,
+      edges,
+      width,
+      height,
+      events,
+      draggable,
+      hideWeights
+    } = this.props;
 
     this.net = new Network(
       this.el,
       { nodes, edges },
-      buildOptions({ width, height, draggable })
+      buildOptions({ width, height, draggable, hideWeights })
     );
     this._resize();
 
