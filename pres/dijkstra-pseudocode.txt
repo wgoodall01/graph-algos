@@ -1,6 +1,6 @@
 prev = new map of vertex::vertex
 dist_to = new map of vertex::number
-Q = new queue of vertices
+Q = new queue of vertices, containing source
 
 dist_to[source] = 0
 
