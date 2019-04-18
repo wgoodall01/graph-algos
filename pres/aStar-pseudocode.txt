@@ -1,7 +1,7 @@
 prev = new map of vertex::vertex
 dist_to = new map of vertex::number
 
-Q = [ new priority queue of vertices,
+Q = [ new priority queue of vertices, containing source
     [ ranked by g(v) + h(v),
     [ where g(v) is dist_to[v],
     [ and h(v) is a heuristic function 
